@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yaye Boye - Will You Be My Valentine? 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .container {
+        text-align: center;
+        background: white;
+        padding: 50px;
+        border-radius: 30px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 500px;
+        z-index: 10;
+        position: relative;
+    }
+
+    h1 {
+        color: #e91e63;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+        animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    .heart-icon {
+        font-size: 4em;
+        margin: 20px 0;
+        display: inline-block;
+        animation: beat 1s ease-in-out infinite;
+    }
+
+    .buttons {
+        margin-top: 30px;
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    button {
+        padding: 15px 40px;
+        font-size: 1.2em;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: bold;
+    }
+
+    .yes-btn {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+    }
+
+    .yes-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 10px 30px rgba(245, 87, 108, 0.5);
+    }
+
+    .no-btn {
+        background: #e0e0e0;
+        color: #666;
+        position: relative;
+    }
+
+    .no-btn:hover {
+        background: #d0d0d0;
+    }
+
+    .message {
+        margin-top: 30px;
+        font-size: 1.3em;
+        color: #666;
+        display: none;
+    }
+
+    .share-section {
+        margin-top: 30px;
+        display: none;
+    }
+
+    .share-link {
+        background: #f5f5f5;
+        padding: 15px;
+        border-radius: 10px;
+        margin: 20px 0;
+        word-break: break-all;
+        font-size: 0.9em;
+        color: #333;
+    }
+
+    .copy-btn {
+        background: #4CAF50;
+        color: white;
+        padding: 10px 30px;
+        font-size: 1em;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .copy-btn:hover {
+        background: #45a049;
+        transform: scale(1.05);
+    }
+
+    .celebration {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 100;
+    }
+
+    .floating-heart {
+        position: absolute;
+        font-size: 2em;
+        animation: float-up 3s ease-in-out;
+        opacity: 0;
+    }
+
+    .result-view {
+        display: none;
+    }
+
+    .result-icon {
+        font-size: 5em;
+        margin: 20px 0;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+
+    @keyframes beat {
+        0%, 100% { transform: scale(1); }
+        25% { transform: scale(1.2); }
+        50% { transform: scale(1); }
+    }
+
+    @keyframes float-up {
+        0% {
+            opacity: 1;
+            transform: translateY(0) rotate(0deg);
+        }
+        100% {
+            opacity: 0;
+            transform: translateY(-1000px) rotate(360deg);
+        }
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    .show {
+        display: block !important;
+    }
+
+    .sad-emoji {
+        font-size: 5em;
+        margin: 20px 0;
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="container">
+        <!-- Question initiale -->
+        <div id="questionView">
+            <h1>Yaye Boye ❤️</h1>
+            <h2 style="color: #e91e63; font-size: 1.8em; margin-bottom: 20px;">Will You Be My Valentine? 💝</h2>
+            <div class="heart-icon">❤️</div>
+
+```
+        <div class="buttons" id="buttonContainer">
+            <button class="yes-btn" id="yesBtn">Oui ! 💕</button>
+            <button class="no-btn" id="noBtn">Non...</button>
+        </div>
+
+        <div class="message" id="message"></div>
+    </div>
+
+    <!-- Vue après réponse -->
+    <div class="result-view" id="resultView">
+        <div class="result-icon" id="resultIcon"></div>
+        <h1 id="resultTitle"></h1>
+        <p id="resultMessage" style="font-size: 1.2em; color: #666; margin: 20px 0;"></p>
+        
+        <div class="share-section show">
+            <p style="color: #666; margin-bottom: 15px;">Partage ce lien pour montrer ta réponse :</p>
+            <div class="share-link" id="shareLink"></div>
+            <button class="copy-btn" id="copyBtn">📋 Copier le lien</button>
+        </div>
+    </div>
+</div>
+
+<div class="celebration" id="celebration"></div>
+
+<script>
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const message = document.getElementById('message');
+    const celebration = document.getElementById('celebration');
+    const buttonContainer = document.getElementById('buttonContainer');
+    const questionView = document.getElementById('questionView');
+    const resultView = document.getElementById('resultView');
+    const resultIcon = document.getElementById('resultIcon');
+    const resultTitle = document.getElementById('resultTitle');
+    const resultMessage = document.getElementById('resultMessage');
+    const shareLink = document.getElementById('shareLink');
+    const copyBtn = document.getElementById('copyBtn');
+    
+    let noBtnClickCount = 0;
+    const noMessages = [
+        "Tu es sûr(e) ? 🥺",
+        "Réfléchis encore... 💭",
+        "Allez, dis oui ! 😊",
+        "Je t'en prie... 🙏",
+        "Une dernière chance ? 💝"
+    ];
+
+    // Vérifier si on accède via un lien avec une réponse
+    function checkUrlParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const response = urlParams.get('response');
+        
+        if (response === 'yes') {
+            showResult('yes');
+        } else if (response === 'no') {
+            showResult('no');
+        }
+    }
+
+    // Fonction pour afficher le résultat
+    function showResult(answer) {
+        questionView.classList.add('hidden');
+        resultView.classList.remove('hidden');
+        resultView.classList.add('show');
+        
+        const currentUrl = window.location.href.split('?')[0];
+        const link = `${currentUrl}?response=${answer}`;
+        shareLink.textContent = link;
+        
+        if (answer === 'yes') {
+            resultIcon.textContent = '💖✨';
+            resultTitle.textContent = ' YES YES YES YES YES YES C LE MBEUGUEL QUI SE PASSE NINI GUAT GUAT   ! 🎉';
+            resultTitle.style.color = '#e91e63';
+            resultMessage.textContent = 'I LOVE YOU  Princess 💕';
+            
+            // Célébration avec des cœurs
+            celebration.style.display = 'block';
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    createFloatingHeart();
+                }, i * 100);
+            }
+        } else {
+            resultIcon.textContent = '💔😢';
+            resultTitle.textContent = 'NON 🥺 ';
+            resultTitle.style.color = '#666';
+            resultMessage.textContent = 'YALLA BAKHNAAAAAA 🥺';
+        }
+    }
+
+    // Déplacer le bouton "Non" de manière aléatoire
+    noBtn.addEventListener('mouseover', () => {
+        const x = Math.random() * (window.innerWidth - 200);
+        const y = Math.random() * (window.innerHeight - 100);
+        
+        noBtn.style.position = 'fixed';
+        noBtn.style.left = x + 'px';
+        noBtn.style.top = y + 'px';
+    });
+
+    noBtn.addEventListener('click', () => {
+        if (noBtnClickCount < noMessages.length) {
+            message.textContent = noMessages[noBtnClickCount];
+            message.classList.add('show');
+            noBtnClickCount++;
+            
+            // Augmenter la taille du bouton "Oui"
+            const currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
+            yesBtn.style.fontSize = (currentSize * 1.2) + 'px';
+            yesBtn.style.padding = (parseInt(window.getComputedStyle(yesBtn).paddingTop) * 1.1) + 'px ' + 
+                                  (parseInt(window.getComputedStyle(yesBtn).paddingLeft) * 1.1) + 'px';
+        } else {
+            // Après 5 tentatives, on peut dire non
+            showResult('no');
+        }
+    });
+
+    yesBtn.addEventListener('click', () => {
+        showResult('yes');
+    });
+
+    // Copier le lien
+    copyBtn.addEventListener('click', () => {
+        const link = shareLink.textContent;
+        navigator.clipboard.writeText(link).then(() => {
+            const originalText = copyBtn.textContent;
+            copyBtn.textContent = '✅ Copié !';
+            setTimeout(() => {
+                copyBtn.textContent = originalText;
+            }, 2000);
+        });
+    });
+
+    function createFloatingHeart() {
+        const heart = document.createElement('div');
+        heart.classList.add('floating-heart');
+        heart.textContent = ['❤️', '💕', '💖', '💗', '💝', '💘'][Math.floor(Math.random() * 6)];
+        heart.style.left = Math.random() * 100 + '%';
+        heart.style.animationDelay = Math.random() * 0.5 + 's';
+        celebration.appendChild(heart);
+
+        setTimeout(() => {
+            heart.remove();
+        }, 3000);
+    }
+
+    // Vérifier au chargement de la page
+    checkUrlParams();
+</script>
+```
+
+</body>
+</html>
